@@ -1,0 +1,170 @@
+\documentclass[11pt, a4paper]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{graphicx} % For including figures (PDF/SVG recommended)
+\usepackage{amsmath}  % For math equations
+\usepackage{hyperref} % For clickable links to code/references
+\usepackage{listings} % For appending code snippets if needed
+\usepackage{float}
+\usepackage{xcolor}
+
+% --- Setup for Code Listings ---
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    backgroundcolor=\color{lightgray!10},
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny
+}
+
+% --- Document Info ---
+\title{Digital Signal Processing: Mandatory Project \\ \large Analysis of the 15 January 2022 Hunga Tonga Eruption}
+\author{Your Name / Candidate Number}
+\date{September 24, 2026}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ---------------------------------------------------------
+\section{Task 1: The Overview}
+% ---------------------------------------------------------
+
+\subsection{Dataset Parsing and Station Map (Task 1a)}
+% Run script, parse dataset, include map plot
+The provided dataset containing the HDF5 sensor time series was parsed. Figure \ref{fig:station_map} displays the geographic map of the event location and the respective recording stations. 
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{figures/your_map_plot.pdf} 
+    \caption{Geographic locations of the sensors and the Hunga Tonga volcano.}
+    \label{fig:station_map}
+\end{figure}
+
+\subsection{Shortest and Longest Great Circle Distances (Task 1b)}
+Based on the station metadata, the calculated great circle distances from the Hunga Tonga event are as follows:
+\begin{itemize}
+    \item \textbf{Shortest distance:} [Insert distance here] km (Station: [Insert Station Name/ID])
+    \item \textbf{Longest distance:} [Insert distance here] km (Station: [Insert Station Name/ID])
+\end{itemize}
+
+\subsection{Distance Distribution Plot (Task 1c)}
+Figure \ref{fig:sorted_distances} displays all sorted distances between the event location and the 201 station locations.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{figures/sorted_distances.pdf}
+    \caption{Sorted great circle distances from Hunga Tonga to all recording stations.}
+    \label{fig:sorted_distances}
+\end{figure}
+
+% ---------------------------------------------------------
+\section{Task 2: Data Filtering}
+% ---------------------------------------------------------
+
+\subsection{FIR Filter Impulse Responses (Task 2a)}
+The three provided FIR filter impulse responses, $h_1[n]$, $h_2[n]$, and $h_3[n]$, are plotted in Figure \ref{fig:impulse_responses}.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{figures/impulse_responses.pdf}
+    \caption{Impulse responses of the three FIR filters.}
+    \label{fig:impulse_responses}
+\end{figure}
+
+\subsection{Custom Convolution Implementation (Task 2b)}
+To filter the input signal $x[n]$ using the FIR filter $h[n]$, the following convolution operation was implemented:
+\begin{equation}
+    y[n] = \sum_{k=-\infty}^{\infty} x[k]h[n-k]
+\end{equation}
+The custom routine includes the \texttt{ylen\_choice} parameter. A verification of this implementation against a toy signal (compared to the standard built-in function) is shown in Figure \ref{fig:convolution_verification}.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{figures/convolution_verification.pdf}
+    \caption{Verification of the custom convolution function using a toy signal.}
+    \label{fig:convolution_verification}
+\end{figure}
+
+\subsection{Discrete-Time Fourier Transform Implementation (Task 2c)}
+The Discrete-Time Fourier Transform (DTFT) of the sequences was computed using the definition:
+\begin{equation}
+    H(e^{j\omega}) = \sum_{n=-\infty}^{\infty} h[n]e^{-j\omega n}
+\end{equation}
+The implemented function takes the inputs \texttt{h}, \texttt{N}, and \texttt{fs}, and outputs both the complex vector $H(e^{j\omega})$ and the frequency axis in Hertz.
+
+\subsection{Frequency Spectra of Filters (Task 2d)}
+The absolute values of the frequency spectra, $|H_1(e^{j\omega})|$, $|H_2(e^{j\omega})|$, and $|H_3(e^{j\omega})|$, are plotted against the physical frequency $F$ in Figure \ref{fig:frequency_spectra}.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{figures/frequency_spectra.pdf}
+    \caption{Absolute frequency spectra of the three provided FIR filters.}
+    \label{fig:frequency_spectra}
+\end{figure}
+
+\subsection{Filter Classification (Task 2e)}
+Based on the frequency spectra observed in Figure \ref{fig:frequency_spectra}, the filters are classified as follows:
+\begin{itemize}
+    \item $h_1[n]$ is a [Insert classification: lowpass/bandpass/highpass] filter.
+    \item $h_2[n]$ is a [Insert classification: lowpass/bandpass/highpass] filter.
+    \item $h_3[n]$ is a [Insert classification: lowpass/bandpass/highpass] filter.
+\end{itemize}
+
+\subsection{Global Data Filtering (Task 2f)}
+All 201 input time series were successfully filtered using the three respective impulse responses via built-in convolution routines for execution speed.
+
+\subsection{Section Plot of Propagating Waves (Task 2g)}
+To recreate findings similar to Matoza et al. (2022), the data was bandpass filtered between 0.01 and 2 Hz. 
+Filter [Insert Filter Name, e.g., $h_2[n]$] was chosen for this task because [Insert your justification here based on your DTFT analysis]. 
+
+Figure \ref{fig:section_plot} shows the resulting section plot with time on the x-axis and distance from Hunga Tonga on the y-axis.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=1\textwidth]{figures/section_plot.pdf}
+    \caption{Section plot of the filtered waveforms (0.01–2 Hz) demonstrating global wave propagation.}
+    \label{fig:section_plot}
+\end{figure}
+
+% ---------------------------------------------------------
+\section{Task 3: Celerity Estimation for the Acoustic Wave}
+% ---------------------------------------------------------
+
+\subsection{Arrival Time Picking (Task 3a)}
+A custom routine was developed to loop over all station signals. For each station, the raw and filtered traces were analyzed to manually pick the arrival time of the higher-frequency infrasound wave. The picked times were saved for subsequent analysis.
+
+\subsection{Celerity Estimation and Literature Comparison (Task 3b)}
+Figure \ref{fig:celerity_fit} plots the estimated travel times against the event-to-station distances. Identified outliers (caused by noise or competing arrivals) are marked in [Insert Color, e.g., red] and were excluded from the linear regression.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{figures/celerity_fit.pdf}
+    \caption{Linear fit of travel time versus distance for celerity estimation. Outliers are excluded from the fit.}
+    \label{fig:celerity_fit}
+\end{figure}
+
+By fitting a straight line to the accepted distance/time data, the slope yielded an estimated celerity of \textbf{[Insert Value]} m/s. 
+
+Comparing this result to the literature, this estimate aligns with typical celerities of infrasound waves as reported by Vergoz et al. (2022) and Matoza et al. (2022), which state [Insert brief comparison/typical values from the papers].
+
+% ---------------------------------------------------------
+\section*{Appendix: Code Links \& Structure}
+\addcontentsline{toc}{section}{Appendix: Code Links \& Structure}
+% ---------------------------------------------------------
+As per the submission requirements, all code is properly commented and attached in the submission archive. 
+
+\begin{itemize}
+    \item \textbf{Main Run Script:} \texttt{main.py} / \texttt{main.m} (Running this script without inputs generates all figures included in this report).
+    \item \textbf{Filtering Module:} \texttt{filters.py} / \texttt{filters.m} (Contains the custom convolution and DTFT functions).
+    \item \textbf{Analysis Module:} \texttt{celerity.py} / \texttt{celerity.m} (Contains the arrival picking tool and linear fit functions).
+\end{itemize}
+
+\end{document}
