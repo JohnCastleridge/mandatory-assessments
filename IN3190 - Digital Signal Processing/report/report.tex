@@ -21,23 +21,22 @@
     numberstyle=\tiny
 }
 
+\renewcommand{\thesubsection}{\alph{subsection})}
+
 % --- Document Info ---
-\title{Digital Signal Processing: Mandatory Project \\ \large Analysis of the 15 January 2022 Hunga Tonga Eruption}
-\author{Your Name / Candidate Number}
-\date{September 24, 2026}
+\title{IN3190 - Digital Signal Processing: Mandatory Project}
+\author{Vegard Nyqvuist Borgeraas}
+\date{Autumn 2026}
 
 \begin{document}
 
 \maketitle
 
-\tableofcontents
-\newpage
-
 % ---------------------------------------------------------
-\section{Task 1: The Overview}
+\section*{Task 1: The Overview}
 % ---------------------------------------------------------
 
-\subsection{Task 1a}
+\subsection{} % 1a)
 % Run script, parse dataset, include map plot
 The provided dataset containing the HDF5 sensor time series was parsed. Figure \ref{fig:1a} displays the geographic map of the event location and the respective recording stations. 
 
@@ -48,14 +47,14 @@ The provided dataset containing the HDF5 sensor time series was parsed. Figure \
     \label{fig:1a}
 \end{figure}
 
-\subsection{Task 1b}
+\subsection{} % 1b)
 Based on the station metadata, the calculated great circle distances from the Hunga Tonga event are as follows:
 \begin{itemize}
     \item \textbf{Shortest distance:} 2137.71 km
     \item \textbf{Longest distance:} 17687.13 km
 \end{itemize}
 
-\subsection{Task 1c}
+\subsection{} % 1c)
 Figure \ref{fig:1c} displays all sorted distances between the event location and the 201 station locations.
 
 \begin{figure}[H]
@@ -66,62 +65,47 @@ Figure \ref{fig:1c} displays all sorted distances between the event location and
 \end{figure}
 
 % ---------------------------------------------------------
-\section{Task 2: Data Filtering}
+\section*{Task 2: Data Filtering}
 % ---------------------------------------------------------
 
-\subsection{FIR Filter Impulse Responses (Task 2a)}
-The three provided FIR filter impulse responses, $h_1[n]$, $h_2[n]$, and $h_3[n]$, are plotted in Figure \ref{fig:impulse_responses}.
+\subsection{} % 2a)
+The three provided FIR filter impulse responses, $h_1[n]$, $h_2[n]$, and $h_3[n]$, are plotted in Figure \ref{fig:2a}.
 
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.8\textwidth]{figures/impulse_responses.pdf}
+    \includegraphics[width=0.8\textwidth]{figures/2a.pdf}
     \caption{Impulse responses of the three FIR filters.}
-    \label{fig:impulse_responses}
+    \label{fig:2a}
 \end{figure}
 
-\subsection{Custom Convolution Implementation (Task 2b)}
-To filter the input signal $x[n]$ using the FIR filter $h[n]$, the following convolution operation was implemented:
-\begin{equation}
-    y[n] = \sum_{k=-\infty}^{\infty} x[k]h[n-k]
-\end{equation}
-The custom routine includes the \texttt{ylen\_choice} parameter. A verification of this implementation against a toy signal (compared to the standard built-in function) is shown in Figure \ref{fig:convolution_verification}.
+\subsection{} % 2b)
+See \texttt{task\_2.py} for the implementation of the convolution function. The custom implementation is verified using \texttt{pytest} by directly comparing its output against NumPy's built-in \texttt{np.convolve} function.
+
+\subsection{} % 2c)
+See \texttt{task\_2.py} for the implementation of the DTFT function.
+
+\subsection{} % 2d)
+The absolute values of the frequency spectra, $|H_1(e^{j\omega})|$, $|H_2(e^{j\omega})|$, and $|H_3(e^{j\omega})|$, are plotted against the physical frequency $F$ in Figure \ref{fig:2d}.
 
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.8\textwidth]{figures/convolution_verification.pdf}
-    \caption{Verification of the custom convolution function using a toy signal.}
-    \label{fig:convolution_verification}
-\end{figure}
-
-\subsection{Discrete-Time Fourier Transform Implementation (Task 2c)}
-The Discrete-Time Fourier Transform (DTFT) of the sequences was computed using the definition:
-\begin{equation}
-    H(e^{j\omega}) = \sum_{n=-\infty}^{\infty} h[n]e^{-j\omega n}
-\end{equation}
-The implemented function takes the inputs \texttt{h}, \texttt{N}, and \texttt{fs}, and outputs both the complex vector $H(e^{j\omega})$ and the frequency axis in Hertz.
-
-\subsection{Frequency Spectra of Filters (Task 2d)}
-The absolute values of the frequency spectra, $|H_1(e^{j\omega})|$, $|H_2(e^{j\omega})|$, and $|H_3(e^{j\omega})|$, are plotted against the physical frequency $F$ in Figure \ref{fig:frequency_spectra}.
-
-\begin{figure}[H]
-    \centering
-    % \includegraphics[width=0.8\textwidth]{figures/frequency_spectra.pdf}
+    \includegraphics[width=0.8\textwidth]{figures/2d.pdf}
     \caption{Absolute frequency spectra of the three provided FIR filters.}
-    \label{fig:frequency_spectra}
+    \label{fig:2d}
 \end{figure}
 
-\subsection{Filter Classification (Task 2e)}
-Based on the frequency spectra observed in Figure \ref{fig:frequency_spectra}, the filters are classified as follows:
+\subsection{} % 2e)
+Based on the frequency spectra observed in Figure \ref{fig:2d}, the filters are classified as follows:
 \begin{itemize}
-    \item $h_1[n]$ is a [Insert classification: lowpass/bandpass/highpass] filter.
-    \item $h_2[n]$ is a [Insert classification: lowpass/bandpass/highpass] filter.
-    \item $h_3[n]$ is a [Insert classification: lowpass/bandpass/highpass] filter.
+    \item $h_1[n]$ is a lowpass filter.
+    \item $h_2[n]$ is a bandpass filter.
+    \item $h_3[n]$ is a highpass filter.
 \end{itemize}
 
-\subsection{Global Data Filtering (Task 2f)}
-All 201 input time series were successfully filtered using the three respective impulse responses via built-in convolution routines for execution speed.
+\subsection{} % 2f)
+All 201 input time series were successfully filtered using the three respective impulse responses via the built-in convolution function in \texttt{numpy}. See \texttt{task\_2.py} for the implementation of the function that performs the filtering.
 
-\subsection{Section Plot of Propagating Waves (Task 2g)}
+\subsection{} % 2g)
 To recreate findings similar to Matoza et al. (2022), the data was bandpass filtered between 0.01 and 2 Hz. 
 Filter [Insert Filter Name, e.g., $h_2[n]$] was chosen for this task because [Insert your justification here based on your DTFT analysis]. 
 
@@ -135,13 +119,13 @@ Figure \ref{fig:section_plot} shows the resulting section plot with time on the 
 \end{figure}
 
 % ---------------------------------------------------------
-\section{Task 3: Celerity Estimation for the Acoustic Wave}
+\section*{Task 3: Celerity Estimation for the Acoustic Wave}
 % ---------------------------------------------------------
 
-\subsection{Arrival Time Picking (Task 3a)}
+\subsection{} % 3a
 A custom routine was developed to loop over all station signals. For each station, the raw and filtered traces were analyzed to manually pick the arrival time of the higher-frequency infrasound wave. The picked times were saved for subsequent analysis.
 
-\subsection{Celerity Estimation and Literature Comparison (Task 3b)}
+\subsection{} % 3b
 Figure \ref{fig:celerity_fit} plots the estimated travel times against the event-to-station distances. Identified outliers (caused by noise or competing arrivals) are marked in [Insert Color, e.g., red] and were excluded from the linear regression.
 
 \begin{figure}[H]
@@ -154,17 +138,5 @@ Figure \ref{fig:celerity_fit} plots the estimated travel times against the event
 By fitting a straight line to the accepted distance/time data, the slope yielded an estimated celerity of \textbf{[Insert Value]} m/s. 
 
 Comparing this result to the literature, this estimate aligns with typical celerities of infrasound waves as reported by Vergoz et al. (2022) and Matoza et al. (2022), which state [Insert brief comparison/typical values from the papers].
-
-% ---------------------------------------------------------
-\section*{Appendix: Code Links \& Structure}
-\addcontentsline{toc}{section}{Appendix: Code Links \& Structure}
-% ---------------------------------------------------------
-As per the submission requirements, all code is properly commented and attached in the submission archive. 
-
-\begin{itemize}
-    \item \textbf{Main Run Script:} \texttt{main.py} / \texttt{main.m} (Running this script without inputs generates all figures included in this report).
-    \item \textbf{Filtering Module:} \texttt{filters.py} / \texttt{filters.m} (Contains the custom convolution and DTFT functions).
-    \item \textbf{Analysis Module:} \texttt{celerity.py} / \texttt{celerity.m} (Contains the arrival picking tool and linear fit functions).
-\end{itemize}
 
 \end{document}

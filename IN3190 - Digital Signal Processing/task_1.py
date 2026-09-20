@@ -186,3 +186,6 @@ if __name__ == "__main__":
     plot_map(lats, lons, tonga_latlon)
 
     dists_km = circle_distance(n_files, lats, lons, tonga_latlon)
+
+    fs = 1 / dt[0]  # Sampling frequency, Hz
+    print("Sampling frequency is {:.2f}Hz".format(fs))
