@@ -2,7 +2,9 @@ from filters import h1, h2, h3
 from task_1 import parse
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import pytest
+from geopy.distance import great_circle
 
 
 # task 2a
@@ -171,3 +173,42 @@ def filter_all():
 
 
 # task 2f
+def plot_section_plot():
+    # READ DATA
+    _, H2, _, times_collection, lats, lons, dt = filter_all()
+    fig, ax = plt.subplots(figsize=(14, 6))
+
+    tonga_latlon = [-20.550, -175.385]
+    amplitude_scale = 3500
+
+    # Downsample step: plot every 100th data point to prevent memory overload
+    ds = 5
+
+    for data, time, lat, lon in zip(H2, times_collection, lats, lons):
+        trace = data
+        dist = great_circle((tonga_latlon[0], tonga_latlon[1]), (lat, lon)).m / 1000
+
+        normalized_trace = trace / (np.max(np.abs(trace)) + 1e-9)
+
+        # 2. Offset the normalized trace
+        shifted_trace = (normalized_trace * amplitude_scale) + dist
+
+        # Plot the downsampled line
+        ax.plot(
+            time[::ds], shifted_trace[::ds], color="black", linewidth=0.3, alpha=0.8
+        )
+
+    # Format the x-axis for datetime objects to match the Science paper
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+    ax.set_xlabel("UTC Time", fontsize=16)
+
+    ax.set_ylabel("Distance from Hunga Tonga [km]", fontsize=16)
+
+    # Optional: lock the y-axis to a 0 - 20,000 km scale
+    ax.set_ylim(0, 21000)
+
+    plt.tight_layout()
+    plt.show()
+
+
+plot_section_plot()
