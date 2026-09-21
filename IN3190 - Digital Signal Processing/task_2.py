@@ -159,52 +159,66 @@ def plot_DTFT(
 
 
 # task 2e
-def filter_all():
+def filter_all(h1=True, h2=True, h3=True):
     # READ DATA
     data_collection, times_collection, lats, lons, dt = parse()
-    H1, H2, H3 = [], [], []
-    for h, H in [(h1, H1), (h2, H2), (h3, H3)]:
-        for data in data_collection:
-            filtered_data = np.convolve(data, h, mode="same")
-            H.append(filtered_data)
-    H1, H2, H3 = np.array(H1), np.array(H2), np.array(H3)
 
-    return H1, H2, H3, times_collection, lats, lons, dt
+    tonga_latlon = [-20.550, -175.385]
+    dist = np.zeros(len(lats))
+    for i, (lat, lon) in enumerate(zip(lats, lons)):
+        dist[i] = great_circle((tonga_latlon[0], tonga_latlon[1]), (lat, lon)).m / 1000
+
+    H1, H2, H3 = None, None, None
+
+    # Conditionally calculate each filter using list comprehensions for speed
+    if h1:
+        print("Filtering H1...")
+        H1 = np.array([np.convolve(data, h1, mode="same") for data in data_collection])
+
+    if h2:
+        print("Filtering H2...")
+        H2 = np.array([np.convolve(data, h2, mode="same") for data in data_collection])
+
+    if h3:
+        print("Filtering H3...")
+        H3 = np.array([np.convolve(data, h3, mode="same") for data in data_collection])
+
+    print("Filtering complete.")
+
+    return H1, H2, H3, times_collection, dist, dt
 
 
 # task 2f
 def plot_section_plot():
     # READ DATA
-    _, H2, _, times_collection, lats, lons, dt = filter_all()
+    _, H2, _, times_collection, dist, dt = filter_all(h1=False, h2=True, h3=False)
     fig, ax = plt.subplots(figsize=(14, 6))
 
     tonga_latlon = [-20.550, -175.385]
-    amplitude_scale = 3500
+    amplitude_scale = 1200
 
     # Downsample step: plot every 100th data point to prevent memory overload
     ds = 5
+    amplitude_scale = 800
 
-    for data, time, lat, lon in zip(H2, times_collection, lats, lons):
+    for data, time, d in zip(H2, times_collection, dist):
         trace = data
-        dist = great_circle((tonga_latlon[0], tonga_latlon[1]), (lat, lon)).m / 1000
 
         normalized_trace = trace / (np.max(np.abs(trace)) + 1e-9)
 
         # 2. Offset the normalized trace
-        shifted_trace = (normalized_trace * amplitude_scale) + dist
+        shifted_trace = (normalized_trace * amplitude_scale) + d
 
         # Plot the downsampled line
         ax.plot(
-            time[::ds], shifted_trace[::ds], color="black", linewidth=0.3, alpha=0.8
+            time[::ds], shifted_trace[::ds], color="black", linewidth=0.1, alpha=0.15
         )
 
-    # Format the x-axis for datetime objects to match the Science paper
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
     ax.set_xlabel("UTC Time", fontsize=16)
 
     ax.set_ylabel("Distance from Hunga Tonga [km]", fontsize=16)
 
-    # Optional: lock the y-axis to a 0 - 20,000 km scale
     ax.set_ylim(0, 21000)
 
     plt.tight_layout()
