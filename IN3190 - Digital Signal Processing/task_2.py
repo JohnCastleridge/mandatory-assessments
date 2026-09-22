@@ -250,6 +250,7 @@ def plot_section_plot():
 
     fig, ax = plt.subplots(figsize=(14, 6))
 
+    # used AI assistece on the following part since I did not know how to implent the plot
     tonga_latlon = [-20.550, -175.385]
     amplitude_scale = 1200
 

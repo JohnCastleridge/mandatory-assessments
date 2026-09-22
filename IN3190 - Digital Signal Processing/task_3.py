@@ -10,17 +10,19 @@ def pick_arrival_times(start_idx=0, end_idx=None, filename="arrival_picks.csv"):
     H1 = filter_data["H1"]
     H2 = filter_data["H2"]
     H3 = filter_data["H3"]
-    raw_data = filter_data["raw"]
+    raw_data = filter_data["raw_data"]
     times_collection = filter_data["times"]
     dist = filter_data["dist"]
     delta_t = filter_data["dt"]
 
+    # this is ugly but the simplest way I came up with
     sorted_data = list(zip(H1, H2, H3, raw_data, times_collection, dist, delta_t))
     sorted_data.sort(key=lambda x: x[5])  # Sort by distance
 
     if end_idx is None:
         end_idx = len(sorted_data)
 
+    # used AI since I did not know how to use
     # Initialize the CSV file with headers if it doesn't exist
     if not os.path.exists(filename):
         with open(filename, "w", newline="") as f:
@@ -81,3 +83,6 @@ def pick_arrival_times(start_idx=0, end_idx=None, filename="arrival_picks.csv"):
 
         # 4. Close the figure programmatically so the loop advances to the next station
         plt.close(fig)
+
+
+pick_arrival_times(start_idx=0)
