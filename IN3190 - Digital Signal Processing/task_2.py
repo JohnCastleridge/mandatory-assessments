@@ -111,7 +111,7 @@ def DTFT(h: np.ndarray, N: int, fs: int) -> tuple[np.ndarray, np.ndarray]:
     for k in range(N):
         for n in range(len(h)):
             H[k] += h[n] * np.exp(-1j * omega[k] * n)
-
+    # Scale omega to Hz
     return H, omega * (fs / (2 * np.pi))
 
 
@@ -158,58 +158,115 @@ def plot_DTFT(
     plt.show()
 
 
-# task 2e
-def filter_all(h1=True, h2=True, h3=True):
+# task 2f
+def filter_all(
+    use_h1: bool = True,
+    use_h2: bool = True,
+    use_h3: bool = True,
+    return_raw: bool = False,
+    return_dist: bool = True,
+) -> dict[str, np.ndarray]:
+    """
+    Filters data using predefined convolution kernels and formats the spatial output.
+
+    Parameters
+    ----------
+    use_h1 : bool, default True
+        If True, applies the H1 filter kernel to the data.
+    use_h2 : bool, default True
+        If True, applies the H2 filter kernel to the data.
+    use_h3 : bool, default True
+        If True, applies the H3 filter kernel to the data.
+    return_raw : bool, default False
+        If True, includes the unfiltered raw data in the returned dictionary.
+    return_dist : bool, default True
+        If True, calculates the great-circle distance (in km) from Tonga.
+        If False, returns the raw latitudes and longitudes instead.
+
+    Returns
+    -------
+    dict[str, np.ndarray]
+        Dictionary containing the requested arrays. Keys may include:
+        'times', 'dt', 'dist', 'lats', 'lons', 'raw_data', 'H1', 'H2', 'H3'.
+    """
     # READ DATA
     data_collection, times_collection, lats, lons, dt = parse()
 
-    tonga_latlon = [-20.550, -175.385]
-    dist = np.zeros(len(lats))
-    for i, (lat, lon) in enumerate(zip(lats, lons)):
-        dist[i] = great_circle((tonga_latlon[0], tonga_latlon[1]), (lat, lon)).m / 1000
+    results = {"times": times_collection, "dt": dt}
 
-    H1, H2, H3 = None, None, None
+    if return_dist:
+        tonga_latlon = (-20.550, -175.385)
+        dist = np.zeros(len(lats))
+        for i, latlon in enumerate(zip(lats, lons)):
+            dist[i] = great_circle(tonga_latlon, latlon).m / 1000
+        results["dist"] = dist
+    else:
+        results["lats"], results["lons"] = lats, lons
 
-    # Conditionally calculate each filter using list comprehensions for speed
-    if h1:
-        print("Filtering H1...")
-        H1 = np.array([np.convolve(data, h1, mode="same") for data in data_collection])
+    if return_raw:
+        results["raw_data"] = data_collection
 
-    if h2:
-        print("Filtering H2...")
-        H2 = np.array([np.convolve(data, h2, mode="same") for data in data_collection])
+    if use_h1:
+        print("Filtering H1")
+        results["H1"] = np.array(
+            [np.convolve(data, h1, mode="same") for data in data_collection]
+        )
 
-    if h3:
-        print("Filtering H3...")
-        H3 = np.array([np.convolve(data, h3, mode="same") for data in data_collection])
+    if use_h2:
+        print("Filtering H2")
+        results["H2"] = np.array(
+            [np.convolve(data, h2, mode="same") for data in data_collection]
+        )
+
+    if use_h3:
+        print("Filtering H3")
+        results["H3"] = np.array(
+            [np.convolve(data, h3, mode="same") for data in data_collection]
+        )
 
     print("Filtering complete.")
 
-    return H1, H2, H3, times_collection, dist, dt
+    return results
 
 
-# task 2f
+# task 2g
 def plot_section_plot():
+    """
+    Plots section traces for the H2-filtered data, offset according to each station's
+    distance from Tonga.
+
+    Parameters:
+    None
+
+    Returns:
+    None
+    """
     # READ DATA
-    _, H2, _, times_collection, dist, dt = filter_all(h1=False, h2=True, h3=False)
+    filter_data = filter_all(h1=False, h3=False)
+    H2 = filter_data["H2"]
+    times_collection = filter_data["times"]
+    dist = filter_data["dist"]
+    dt = filter_data["dt"]
+
     fig, ax = plt.subplots(figsize=(14, 6))
 
     tonga_latlon = [-20.550, -175.385]
     amplitude_scale = 1200
 
-    # Downsample step: plot every 100th data point to prevent memory overload
+    # downsample to prevent memory overload
     ds = 5
+    # scale to look the best
     amplitude_scale = 800
 
     for data, time, d in zip(H2, times_collection, dist):
         trace = data
 
-        normalized_trace = trace / (np.max(np.abs(trace)) + 1e-9)
+        # Normalize the trace such that the all signals have the same amplitude
+        normalized_trace = trace / (np.max(np.abs(trace)) + 1e-4)
 
-        # 2. Offset the normalized trace
+        # Offset the trace accordance withe its distance from tonga
         shifted_trace = (normalized_trace * amplitude_scale) + d
 
-        # Plot the downsampled line
         ax.plot(
             time[::ds], shifted_trace[::ds], color="black", linewidth=0.1, alpha=0.15
         )
@@ -223,6 +280,3 @@ def plot_section_plot():
 
     plt.tight_layout()
     plt.show()
-
-
-plot_section_plot()

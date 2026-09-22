@@ -36,6 +36,7 @@
 \section*{Task 1: The Overview}
 \setcounter{subsection}{0}
 % ---------------------------------------------------------
+The entirety of task 1 was completed using the code provided by Markus Bjørklund.
 
 \subsection{} % 1a)
 % Run script, parse dataset, include map plot
@@ -54,6 +55,7 @@ Based on the station metadata, the calculated great circle distances from the Hu
     \item \textbf{Shortest distance:} 2137.71 km
     \item \textbf{Longest distance:} 17687.13 km
 \end{itemize}
+
 
 \subsection{} % 1c)
 Figure \ref{fig:1c} displays all sorted distances between the event location and the 201 station locations.
@@ -84,7 +86,10 @@ The three provided FIR filter impulse responses, $h_1[n]$, $h_2[n]$, and $h_3[n]
 See \texttt{task\_2.py} for the implementation of the convolution function. The custom implementation is verified using \texttt{pytest} by directly comparing its output against NumPy's built-in \texttt{np.convolve} function.
 
 \subsection{} % 2c)
-See \texttt{task\_2.py} for the implementation of the DTFT function.
+See \texttt{task\_2.py} for the implementation of the DTFT function. 
+I use this formula to convert the normalized frequency $\omega$ to the physical frequency $f$:
+$$f = \frac{\omega \cdot f_s}{2\pi}$$
+
 
 \subsection{} % 2d)
 The absolute values of the frequency spectra, $|H_1(e^{j\omega})|$, $|H_2(e^{j\omega})|$, and $|H_3(e^{j\omega})|$, are plotted against the physical frequency $F$ in Figure \ref{fig:2d}.
@@ -108,9 +113,11 @@ Based on the frequency spectra observed in Figure \ref{fig:2d}, the filters are 
 All 201 input time series were successfully filtered using the three respective impulse responses via the built-in convolution function in \texttt{numpy}. See \texttt{task\_2.py} for the implementation of the function that performs the filtering.
 
 \subsection{} % 2g)
-from \ref{fig:2d}, it is evident that the bandpass filter $h_2[n]$ effectively isolates the frequency range of interest between 0.01 and 2 Hz. Therefore I chose to use this filter for further analysis.
+From \ref{fig:2d}, it is evident that the bandpass filter $h_2[n]$ effectively isolates the frequency range of interest between 0.01 and 2 Hz. Therefore I chose to use this filter for further analysis.
 
 Figure \ref{fig:2g} shows the resulting section plot with time on the x-axis and distance from Hunga Tonga on the y-axis.
+I used AI assistance to generate the section plot, since I did not know how to implement it.
+The export from PNG to PDF made the graph harder to read.
 
 \begin{figure}[H]
     \centering
@@ -120,7 +127,7 @@ Figure \ref{fig:2g} shows the resulting section plot with time on the x-axis and
 \end{figure}
 
 % ---------------------------------------------------------
-\section*{Task 3: Celerity Estimation for the Acoustic Wave}
+\section*{Task 3: Estimating the celerity of the globally propagating acoustic wave}
 \setcounter{subsection}{0}
 % ---------------------------------------------------------
 

@@ -1,8 +1,9 @@
 # the big datset for the IN3190 project is too large
 IN3190 - Digital Signal Processing/data/
+STK1110 - Statistiske metoder og dataanalyse\forsikringskrav.txt"
 
-# Created by https://www.toptal.com/developers/gitignore/api/windows,python,latex
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,python,latex
+# Created by https://www.toptal.com/developers/gitignore/api/latex,python,windows,r
+# Edit at https://www.toptal.com/developers/gitignore?templates=latex,python,windows,r
 
 ### LaTeX ###
 ## Core latex/pdflatex auxiliary files:
@@ -485,6 +486,61 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+### R ###
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+.RDataTmp
+
+# User-specific files
+.Ruserdata
+
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# knitr and R markdown default cache directories
+*_cache/
+/cache/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+# R Environment Variables
+.Renviron
+
+# pkgdown site
+docs/
+
+# translation temp files
+po/*~
+
+# RStudio Connect folder
+rsconnect/
+
+### R.Bookdown Stack ###
+# R package: bookdown caching files
+/*_files/
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -511,4 +567,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,python,latex
+# End of https://www.toptal.com/developers/gitignore/api/latex,python,windows,r
