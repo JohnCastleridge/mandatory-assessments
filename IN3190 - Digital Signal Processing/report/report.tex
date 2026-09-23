@@ -117,7 +117,7 @@ All 201 input time series were successfully filtered using the three respective 
 From Figure \ref{fig:2d}, it is evident that the bandpass filter $h_2[n]$ effectively isolates the frequency range of interest between 0.01 and 2 Hz. Therefore I chose to use this filter for further analysis.
 
 Figure \ref{fig:2g} shows the resulting section plot with time on the x-axis and distance from Hunga Tonga on the y-axis.
-I used AI assistance to generate the section plot, since I did not know how to implement it.
+I used AI assistance to help generate the section plot, since I did not know how to implement it.
 The export from PNG to PDF made the graph harder to read for some reason.
 
 \begin{figure}[H]
@@ -134,7 +134,8 @@ The export from PNG to PDF made the graph harder to read for some reason.
 
 \subsection{} % 3a
 See \texttt{task\_3.py} for the implementation.
-A custom routine was developed to loop through all station signals. For each station, the raw and filtered traces were inspected to manually pick the wave arrival time, with each pick saved to a \texttt{CSV} file. To facilitate outlier rejection for stations with high noise levels or missing signals, an unphysical arrival time matching the eruption onset was intentionally assigned. This produced an apparent travel time near zero, allowing non-viable stations to be cleanly filtered out prior to celerity estimation.
+For each station, the raw and filtered traces were inspected to manually pick the wave arrival time, with each pick saved to a \texttt{CSV} file. To make it  outlier rejection for stations with high noise levels or missing signals, an unphysical arrival time matching the eruption onset was intentionally assigned. This produced an apparent travel time near zero, allowing non-viable stations to be cleanly filtered out prior to celerity estimation.
+I used AI assistance to implment \texttt{matplotlib.pyplot.ginput}, since I did not know how to it works.
 \newpage
 
 \subsection{} % 3b

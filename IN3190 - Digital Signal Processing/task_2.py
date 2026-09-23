@@ -242,7 +242,7 @@ def plot_section_plot():
     None
     """
     # READ DATA
-    filter_data = filter_all(h1=False, h3=False)
+    filter_data = filter_all(use_h1=False, use_h3=False)
     H2 = filter_data["H2"]
     times_collection = filter_data["times"]
     dist = filter_data["dist"]
@@ -281,3 +281,9 @@ def plot_section_plot():
 
     plt.tight_layout()
     plt.show()
+
+
+if __name__ == "__main__":
+    plot_impulse_responses(h1, h2, h3)
+    plot_DTFT(h1, h2, h3)
+    plot_section_plot()
