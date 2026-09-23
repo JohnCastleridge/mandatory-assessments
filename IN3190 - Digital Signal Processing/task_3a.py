@@ -85,4 +85,5 @@ def pick_arrival_times(start_idx=0, end_idx=None, filename="arrival_picks.csv"):
         plt.close(fig)
 
 
-pick_arrival_times(start_idx=0)
+if __name__ == "__main__":
+    pick_arrival_times(start_idx=0)
