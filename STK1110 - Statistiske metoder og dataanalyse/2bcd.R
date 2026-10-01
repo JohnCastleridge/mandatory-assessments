@@ -39,7 +39,8 @@ chi_ovre  <- qchisq(0.975, df = n - 1)
 nedre_grense_sigma <- sqrt((n - 1) * s^2 / chi_ovre)
 ovre_grense_sigma  <- sqrt((n - 1) * s^2 / chi_nedre)
 
-dekker_sigma <- (nedre_grense_sigma <= sigma_sann) & (ovre_grense_sigma >= sigma_sann)
+dekker_sigma <- (nedre_grense_sigma <= sigma_sann) & 
+                (ovre_grense_sigma >= sigma_sann)
 andel_sigma <- mean(dekker_sigma)
 
 cat("Andel intervaller som inneholder 30:", andel_sigma, "\n")

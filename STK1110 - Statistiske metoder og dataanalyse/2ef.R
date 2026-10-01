@@ -34,7 +34,8 @@ nedre_grense_sigma <- sqrt((n - 1) * s^2 / chi_ovre)
 ovre_grense_sigma  <- sqrt((n - 1) * s^2 / chi_nedre)
 
 sigma_tilde <- sigma_sann * sqrt(7 / (7 - 2))
-dekker_sigma_tilde <- (nedre_grense_sigma <= sigma_tilde) & (ovre_grense_sigma >= sigma_tilde)
+dekker_sigma <- (nedre_grense_sigma <= sigma_sann) & 
+                (ovre_grense_sigma >= sigma_sann)
 andel_sigma_tilde <- mean(dekker_sigma_tilde)
 
 cat("Andel intervaller som inneholder sigma_tilde:", andel_sigma_tilde, "\n")
